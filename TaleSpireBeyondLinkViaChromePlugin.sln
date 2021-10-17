@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeyondLinkViaChromePlugin", "TaleSpireBeyondLinkViaChromePlugin\BeyondLinkViaChromePlugin.csproj", "{C303405D-E66C-4316-9CDB-4E3CA15C6360}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeyondLinkServer", "BeyondLinkServer\BeyondLinkServer.csproj", "{6F14CB31-4791-461B-B3ED-72B891FCE974}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C303405D-E66C-4316-9CDB-4E3CA15C6360}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C303405D-E66C-4316-9CDB-4E3CA15C6360}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C303405D-E66C-4316-9CDB-4E3CA15C6360}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C303405D-E66C-4316-9CDB-4E3CA15C6360}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F14CB31-4791-461B-B3ED-72B891FCE974}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F14CB31-4791-461B-B3ED-72B891FCE974}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F14CB31-4791-461B-B3ED-72B891FCE974}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F14CB31-4791-461B-B3ED-72B891FCE974}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {79FAA5E2-9969-4358-BEEB-B4B175EED0E0}
+	EndGlobalSection
+EndGlobal

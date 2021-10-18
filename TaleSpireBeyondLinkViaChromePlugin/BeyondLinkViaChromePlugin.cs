@@ -14,7 +14,7 @@ namespace LordAshes
         // Plugin info
         public const string Name = "Beyond Link Via Chrome Plug-In";
         public const string Guid = "org.lordashes.plugins.beyondlinkviachrome";
-        public const string Version = "1.1.1.0";
+        public const string Version = "1.3.0.0";
 
         public DateTime lastUpdate = DateTime.UtcNow;
 
@@ -37,9 +37,9 @@ namespace LordAshes
             refreshRate = Config.Bind("Settings", "Refreh Rate (ms)", 5000).Value;
 
             statSource[0] = Config.Bind("Settings", "HP Slot", "HP.Current,HP.Max").Value;
-            statSource[1] = Config.Bind("Settings", "Stat Slot 0", "AC,AC").Value;
-            statSource[2] = Config.Bind("Settings", "Stat Slot 1", "HD.Used,HD.Total").Value;
-            statSource[3] = Config.Bind("Settings", "Stat Slot 2", "").Value;
+            statSource[1] = Config.Bind("Settings", "Stat Slot 0", "HD.Used,level").Value;
+            statSource[2] = Config.Bind("Settings", "Stat Slot 1", "AC,AC").Value;
+            statSource[3] = Config.Bind("Settings", "Stat Slot 2", "Order,Move").Value;
             statSource[4] = Config.Bind("Settings", "Stat Slot 3", "").Value;
             statSource[5] = Config.Bind("Settings", "Stat Slot 4", "").Value;
             statSource[6] = Config.Bind("Settings", "Stat Slot 5", "").Value;
@@ -50,14 +50,14 @@ namespace LordAshes
             System.Diagnostics.Process[] pname = System.Diagnostics.Process.GetProcessesByName("BeyondLinkServer");
             if (pname.Length == 0)
             {
-                Debug.Log("Beyond Link Via Chrome Plugin: Starting the BeyondLinkServer At "+ location + @"\BeyondLinkServer.exe");
+                Debug.Log("Beyond Link Via Chrome Plugin: Starting the BeyondLinkServer At "+ location + @"\BeyondLinkServer.exe "+ Config.Bind("Settings", "Beyond Link Server Port", 9100).Value.ToString());
                 // Start the BeyondLinkServer
                 System.Diagnostics.Process server = new System.Diagnostics.Process()
                 {
                     StartInfo = new System.Diagnostics.ProcessStartInfo()
                     {
                         FileName = location+@"\BeyondLinkServer.exe",       // BeyondLinkServer executable
-                        Arguments = "",                                     // No arguments means it will run in plugin mode (self shutdown if TaleSpire is not running)
+                        Arguments = Config.Bind("Settings", "Beyond Link Server Port", 9100).Value.ToString(), // Port
                         CreateNoWindow = !Config.Bind("Settings", "Show Server Window", true).Value,
                         UseShellExecute = true,
                         WorkingDirectory = location
@@ -156,7 +156,7 @@ namespace LordAshes
                                         CreatureStat cs = new CreatureStat(float.Parse(current), float.Parse(max));
                                         CreatureManager.SetCreatureStatByIndex(asset.Creature.CreatureId, cs, s);
                                         // Set creature stats based on how this plugin will update the stats
-                                        CampaignSessionManager.SetCreatureStatNames(Config.Bind("Settings","Stat Names", "AC,HD").Value.ToString().Split(','));
+                                        CampaignSessionManager.SetCreatureStatNames(Config.Bind("Settings","Stat Names", "HD,AC,Move").Value.ToString().Split(','));
                                     }
                                 }
                             }

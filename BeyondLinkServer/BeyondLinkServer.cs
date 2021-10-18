@@ -27,7 +27,7 @@ namespace LordAshes
             //
             // Plugin Mode: No parameters means the server was launched by the TaleSpire plugin
             //
-            if (args.Length == 0)
+            if (!Environment.CommandLine.ToUpper().Contains("LEARN"))
             {
                 // Check to see that TaleSpire is running
                 pulse.Elapsed += (s, e) =>
@@ -45,7 +45,7 @@ namespace LordAshes
             {
                 learn = true;
             }
-            serverSocket.Bind(new IPEndPoint(IPAddress.Any, 9100));
+            serverSocket.Bind(new IPEndPoint(IPAddress.Any, int.Parse(args[0])));
             serverSocket.Listen(1); //just one socket
             serverSocket.BeginAccept(null, 0, OnAccept, null);
             Console.Read();

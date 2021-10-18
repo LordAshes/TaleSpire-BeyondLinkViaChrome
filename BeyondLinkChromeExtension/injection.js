@@ -121,6 +121,7 @@ setInterval(()=>
 		  '"Prof": "'+				GetModifier("ct-proficiency-bonus-box__value")+'",\r\n'+
 		  '"Move": '+				GetStat("ct-speed-box__box-value","ddbc-distance-number__number")+',\r\n'+
 		  '"Init": "'+				GetModifier("ct-combat-tablet__initiative")+'",\r\n'+
+		  '"Order": "'+				GetModifier("ct-combat-tablet__initiative")+'",\r\n'+
 		  '"Abilities": {\r\n'+
 		  '"STR": "'+				GetModifier(">str</span></div><div class=\"ddbc-ability-summary__primary")+'",\r\n'+
 		  '"DEX": "'+				GetModifier(">dex</span></div><div class=\"ddbc-ability-summary__primary")+'",\r\n'+
@@ -166,7 +167,7 @@ setInterval(()=>
 		  '}'+
 		  "}";
 		  
-	// alert(specs);
+	// alert(specs); // Turn this on troubleshooting to verify the content being sent by Chrome to the Beyond Link Server
 	
 	try
 	{

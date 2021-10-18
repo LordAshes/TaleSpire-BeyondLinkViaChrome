@@ -24,9 +24,12 @@ next pass.
  
 ## Change Log
 
+1.3.0: Added port to server and R2ModMan configruation to allow using a different port.
+       Added Initiative and Move to the default configuration. 
+       
 1.2.0: Modified extraction script to avoid javascript crash if character sheet it is not on the attacks
        page. Will not be able to read attacks rolls but will not cause crash.
-
+       
 1.1.0: Added refresh rate selection. Ensure that Chrome refresh rate is same.
 
 1.1.0: Added ability to assign extracted file values to stats.
@@ -36,11 +39,8 @@ next pass.
 ## Install
 
 1. Use R2ModMan or similar installer to install this plugin.
-
 2. Open Chrome to the address chrome://extensions/
-
 3. Ensure Developer Mode is on
-
 4. Use the Load Unpackaged option to load the Chrome Extension from the BeyondLinkChromeExtension folder
    of the installed plugin
    
@@ -62,7 +62,9 @@ data can be stored in stats. Leave slots blank in order to not use them.
 
 There are two mode of using this plugin: Basic and Advanced.
 
-Basic Mode involves using this to update the current HP, max HP, AC, used HD and total HD on minis.
+Basic Mode involves using this to update the current HP, max HP, AC, used HD and total HD, initiative and
+Speed on minis.
+
 Advanced Mode involves also using the plugin, in conjunction with the Dice Selection Plugin, to make rolls.
  
 ### Basic Mode
@@ -109,18 +111,19 @@ It is possible to run a component of the Beyond Link Via Chrome stand alone to g
 D&D Beyond rolls before starting TaleSpire. The steps for this are as follows:
 
 1. Start the BeyondLinkServer (found in the plugin directory) with a parameter of Learn
-   ```BeyondLinkServer Learn```
-   
+   ```BeyondLinkServer *Post* Learn```
+   Where *Port* is the desired port number (default 9100).
+
 2. Open a D&D Beyond character in the Chrome browser.
-3. 
-4. Click the Short Rest button to open the Hit Dice information. This is needed in order to obtain properly
+
+3. Click the Short Rest button to open the Hit Dice information. This is needed in order to obtain properly
    Hit Dice information.
-   
+
 4. Wait around 10 seconds and the character's information should be synced. You will see entries for all
    the found information identified in the BeyondLInkServer window. This process has created the related
    DSM files prior to TaleSpire being started so the Dice Selection plugin can get the latest roll information
    when it starts.
-   
+
 5. You can close the BeyondLinkServer window.
 
 6. Start Talespire using the steps in the Basic Mode. Your rolls should be updated.
@@ -131,11 +134,56 @@ Note: You do not need to do this every time. You only need to do these steps whe
 ## Limitations
 
 1. The tab with the D&D Beyond character must remain open in Chrome in order to get updates.
+
 2. The Short Rest dialog needs to be open in order to get correct Hit Dice information. If the Short Rest
    windows is closed, the Hit Dice informatation may be wrong.
+
 3. The Beyond Link Server component which takes data from Chrome and turns it into uable files by the plugin
    is currently single client only. Since all the communication is done in bursts with the socket being
    closed in between this is acceptable for a few characters. With larger parties it is suggested to distribute
    the updating jobs between the players.
+
 4. Some of the current information may not be optimized for multi classing characters.
-   
+
+## Troubleshooting
+
+If the link does not seem to work then look at the Beyond Link Server window. This not NOT the BepInEx console
+but, instead, is the window that starts automatically when TS is started (or was started manually). If there is
+or more entries being written to this file every 5 seconds or so, then the Chrome Extension is able to connect
+to the server and thus the problem is probably in your R2ModMan configuration (i.e. is a problem between the
+Beyond Link Server and the TS plugin). If the Beyond Link Server window is not getting any messages then the
+Chrome Extension is not able to connect to the server.
+
+### Looking At The Chrome Console
+
+If Chrome does not seem to be able to connect to the Beyond Link Server, one can try looking at the Chrome console
+to see if it has any clues. Press F12 to open Developer Tools and then select the Console tab. Check to see if
+there are any error messages. The most common error message is a message saying Chrome is unable to connect to
+127.0.0.1:9100. If this is the case, try switching ports.
+
+### Switching Ports
+
+In order to switch ports, the port number need to be changed in 2 places (in the Chrome Extension and on the TS
+plugin). To do this:
+
+1. Stop TS.
+
+2. Stop the Chrome Extension.
+
+3. Edit the Chrome Extension injection.js file. Near the bottom is the websocket send command which includes the
+   port number (normally 9100). Change this to the desired port. Save.
+
+4. Either remove and re-add the Chrome Extension or press the circular arrow button to reload the Chrome Extension.
+
+5. Reload any D&D Beyond page that may be open (if any).
+
+6. Edit the R2ModMan configuration for the Beyond Link via Chrome plugin. Change the port number to the same
+   number set in step 3. Save.
+
+7. Start TS.
+
+### Windows Permissions
+
+If communication is still not established, try running the Beyond Link Server stand alone and As Administrator.
+This may cause a prompt to show up asking if you want to allow the communication. Allow the communication.
+The application should remember this setting so it is not necessary to do it each time.

@@ -4,37 +4,44 @@ This unofficial TaleSpire plugin for transferring data from D&D Beyond to Talesp
 While the Beyond Link Plugin uses a General Data Parser for allowing data from different sources, it
 does not parse D&D Beyond Data well because the JSON data has a list of features that are part of the
 character but not the stat totals. This means the parser needs to perform calculations to obtain the
-totals. The Beyond Link Via Chrome Plugin changes that. It is specifically for D&D Beyond only but it
-is able to read the final totals from the D&D Beyond characters. This plugin, updates current HP, max
-HP, AC, used HD and total HD. This plugin also updates DSM files with ability score rolls, save rolls,
-skill rolls and attack rolls, if you want to use the Dice Selection plugin in conjunction with this
-plugin. However, if the Dice Selection plugin is not used, this plugin can still be used to get the
-benefits of updating the main stats.
+totals. The Beyond Link Via Chrome Plugin changes that. It uses a Chrome Extension to get at the final
+results on the character sheet as opposed to calculating the totals. While written specifically for
+D&D Beyond character sheets the logic of the Chrome Extension can be modified to support other sources.
+This plugin, updates current HP, max HP, AC, used HD, total HD, inititive and speed. 
 
 The design uses a 3 component solution: the Chrome Extension, the Beyond Link Server and the actual
-TaleSpire BeyondLinkViaChrome plugin. However, the Beyond Link Server is mostly transparent to the
-user - it is started by the plugin and closes itself automatically if TaleSpire is stopped. However,
-this 3 component implementation means that the TaleSpire plugin portion is never waiting for data.
-The data exchange is done between the Chrome Extension and the Beyond Link Server. Since the Beyond
-Link Server runs outside of TaleSpire (stand alone), if the communication fails or is slow it will
-not have any direct impact (i.e. block) on TaleSpire GUI (beyond general device resources). The Beyond
-Link Server makes any data changes available to the plugin via local files which means any failures
-to update statistics will just make the plugin use the old value and pick up the new value on the
-next pass.
+TaleSpire BeyondLinkViaChrome plugin. The Beyond Link Server is mostly transparent to the user. It is
+started by the plugin and closes itself automatically if TaleSpire is stopped. However, this 3 component
+implementation means that the TaleSpire plugin portion is never waiting for data. The data exchange is
+done between the Chrome Extension and the Beyond Link Server. Since the Beyond Link Server runs outside
+of TaleSpire (stand alone), if the communication fails or is slow it will not have any direct impact
+(i.e. block) on TaleSpire GUI (beyond general device resources). The Beyond Link Server makes any data
+changes available to the plugin via local files which means any failures to update statistics will just
+make the plugin use the old value and pick up the new value on the next pass.
+
+The Beyond Link Server also searched through installed and active plugins for any plugins which contain
+LinkData handlers. These handlers are used to teach Beyond Link Server how to make specific files needed
+by these other plugins so that these plugins can use the gathered information. Examples of plugins, that
+provide a LinkData handler so that they can be used with the Beyond Link data, are Dice Selection plugin
+and Rule Set 5E plugin. However, if other plugins want to use the Beyond Link data they can add their own
+LinkData handler and Beyond Link Server will be able to serve them.
  
 ## Change Log
-
+```
+2.0.0: Bug fix for BR HF Integration update
+1.4.1: Corrected corrupted upload
+1.4.0: Updated Beyond Link Server with LinkData handlers mechanism to allow Beyond Link Server to produce
+	   many different files, with the beyond link data, for various plugins.
+1.4.0: Updated Chrome Extension extraction logic to fix bugs and make it more robust.
+1.4.0: No changes to the actual plugin DLL file (which remains at version 1.3.0)
 1.3.0: Added port to server and R2ModMan configruation to allow using a different port.
        Added Initiative and Move to the default configuration. 
-       
 1.2.0: Modified extraction script to avoid javascript crash if character sheet it is not on the attacks
        page. Will not be able to read attacks rolls but will not cause crash.
-       
 1.1.0: Added refresh rate selection. Ensure that Chrome refresh rate is same.
-
 1.1.0: Added ability to assign extracted file values to stats.
-
 1.0.0: Initial release
+```
 
 ## Install
 
@@ -70,19 +77,13 @@ Advanced Mode involves also using the plugin, in conjunction with the Dice Selec
 ### Basic Mode
 
 1. Start TaleSpire
-
 2. When the plugin starts a new window will appear. Do not close this window, just Alt-Tab (or otherwise)
    switch back to the TaleSpire screen.
-
 3. Rename a mini to match the D&D Beyond name.
-
 4. Open a D&D Beyond character, in the Chrome browser, that corresponds to the name used in step 3.
-
 5. Click the Short Rest button to open the Hit Dice information. This is needed in order to obtain properly
    Hit Dice information.
-
 6. Wait around 10 seconds and the mini's stats should synchronize. Updates occurs every 5 seconds or so.
-
 7. When TaleSpire closes, the window that opened in step 2 will disappear within about 10 seconds.
 
 ### Advanced Mode
@@ -113,19 +114,14 @@ D&D Beyond rolls before starting TaleSpire. The steps for this are as follows:
 1. Start the BeyondLinkServer (found in the plugin directory) with a parameter of Learn
    ```BeyondLinkServer *Post* Learn```
    Where *Port* is the desired port number (default 9100).
-
 2. Open a D&D Beyond character in the Chrome browser.
-
 3. Click the Short Rest button to open the Hit Dice information. This is needed in order to obtain properly
    Hit Dice information.
-
 4. Wait around 10 seconds and the character's information should be synced. You will see entries for all
    the found information identified in the BeyondLInkServer window. This process has created the related
    DSM files prior to TaleSpire being started so the Dice Selection plugin can get the latest roll information
    when it starts.
-
 5. You can close the BeyondLinkServer window.
-
 6. Start Talespire using the steps in the Basic Mode. Your rolls should be updated.
 
 Note: You do not need to do this every time. You only need to do these steps when rolls change such as when
@@ -134,15 +130,12 @@ Note: You do not need to do this every time. You only need to do these steps whe
 ## Limitations
 
 1. The tab with the D&D Beyond character must remain open in Chrome in order to get updates.
-
 2. The Short Rest dialog needs to be open in order to get correct Hit Dice information. If the Short Rest
    windows is closed, the Hit Dice informatation may be wrong.
-
 3. The Beyond Link Server component which takes data from Chrome and turns it into uable files by the plugin
    is currently single client only. Since all the communication is done in bursts with the socket being
    closed in between this is acceptable for a few characters. With larger parties it is suggested to distribute
    the updating jobs between the players.
-
 4. Some of the current information may not be optimized for multi classing characters.
 
 ## Troubleshooting
@@ -167,19 +160,13 @@ In order to switch ports, the port number need to be changed in 2 places (in the
 plugin). To do this:
 
 1. Stop TS.
-
 2. Stop the Chrome Extension.
-
 3. Edit the Chrome Extension injection.js file. Near the bottom is the websocket send command which includes the
    port number (normally 9100). Change this to the desired port. Save.
-
 4. Either remove and re-add the Chrome Extension or press the circular arrow button to reload the Chrome Extension.
-
 5. Reload any D&D Beyond page that may be open (if any).
-
 6. Edit the R2ModMan configuration for the Beyond Link via Chrome plugin. Change the port number to the same
    number set in step 3. Save.
-
 7. Start TS.
 
 ### Windows Permissions

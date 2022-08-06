@@ -14,7 +14,7 @@ namespace LordAshes
         // Plugin info
         public const string Name = "Beyond Link Via Chrome Plug-In";
         public const string Guid = "org.lordashes.plugins.beyondlinkviachrome";
-        public const string Version = "1.3.0.0";
+        public const string Version = "2.0.0.0";
 
         public DateTime lastUpdate = DateTime.UtcNow;
 
@@ -91,12 +91,12 @@ namespace LordAshes
                                     string current = System.IO.File.ReadAllText(data + StatMessaging.GetCreatureName(asset) + "." + names[0]);
                                     string max = System.IO.File.ReadAllText(data + StatMessaging.GetCreatureName(asset) + "." + names[1]);
                                     CreatureDataV2 cd;
-                                    CreatureManager.TryGetCreatureData(asset.Creature.CreatureId, out cd);
+                                    CreatureManager.TryGetCreatureData(asset.CreatureId, out cd);
                                     bool changed = false;
                                     switch (s)
                                     {
                                         case -1:
-                                            if (asset.Creature.Hp.Value != float.Parse(current) || asset.Creature.Hp.Max != float.Parse(max))
+                                            if (asset.Hp.Value != float.Parse(current) || asset.Hp.Max != float.Parse(max))
                                             {
                                                 changed = true;
                                             }
@@ -154,7 +154,7 @@ namespace LordAshes
                                     {
                                         Debug.Log("Beyond Link Via Chrome Plugin: Syncing '" + StatMessaging.GetCreatureName(asset) + "." + names[0] + "/" + names[1] + " To Slot "+s);
                                         CreatureStat cs = new CreatureStat(float.Parse(current), float.Parse(max));
-                                        CreatureManager.SetCreatureStatByIndex(asset.Creature.CreatureId, cs, s);
+                                        CreatureManager.SetCreatureStatByIndex(asset.CreatureId, cs, s);
                                         // Set creature stats based on how this plugin will update the stats
                                         CampaignSessionManager.SetCreatureStatNames(Config.Bind("Settings","Stat Names", "HD,AC,Move").Value.ToString().Split(','));
                                     }
